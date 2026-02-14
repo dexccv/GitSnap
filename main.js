@@ -15,7 +15,7 @@ const toggleReadme = document.getElementById('toggle-readme')
 const toggleExplorer = document.getElementById('toggle-explorer')
 
 // GitHub Token (hardcoded for higher rate limits)
-const GITHUB_TOKEN = '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'
+const GITHUB_TOKEN = 'isi token kamu'
 
 // Containers
 const explorerSidebar = document.getElementById('explorer-sidebar')
