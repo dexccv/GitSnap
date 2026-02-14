@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GitSnap - Premium GitHub Screenshots</title>
+  <meta name="description"
+    content="Generate professional, high-fidelity screenshots of your GitHub projects for social media." />
+  <link rel="stylesheet" href="./style.css" />
+</head>
+
+<body>
+  <div class="bg-glow"></div>
+
+  <div id="app" class="app-container">
+    <header>
+      <h1>GitSnap</h1>
+      <p class="subtitle">Turn your code into a shareable masterpiece</p>
+    </header>
+
+    <div class="input-section">
+      <input type="text" id="repo-url" placeholder="Paste GitHub repository URL..." autofocus />
+      <button id="generate-btn" class="primary">Generate</button>
+    </div>
+
+    <main class="main-content">
+      <div class="preview-container">
+        <div id="capture-area" class="card-wrapper">
+          <div id="github-card" class="github-card layout-wide">
+            <div class="browser-header">
+              <div class="dots">
+                <div class="dot red"></div>
+                <div class="dot yellow"></div>
+                <div class="dot green"></div>
+              </div>
+              <div class="browser-title" id="browser-url">github.com/dexccv/valentine</div>
+            </div>
+
+            <div class="card-body">
+              <aside class="sidebar" id="explorer-sidebar">
+                <div class="sidebar-label">Explorer</div>
+                <div class="file-list" id="explorer-list">
+                  <!-- Files injected here -->
+                </div>
+              </aside>
+
+              <main class="main-view">
+                <div class="repo-header">
+                  <div class="repo-title-row">
+                    <div class="repo-name" id="card-repo-full">
+                      <span>Author /</span> dexccv
+                    </div>
+                    <div class="lang-badge">
+                      <div id="card-lang-color" style="width: 10px; height: 10px; border-radius: 50%;"></div>
+                      <span id="card-lang">JavaScript</span>
+                    </div>
+                  </div>
+                </div>
+
+                <section class="readme-section" id="readme-container">
+                  <div class="readme-content" id="readme-rendered">
+                    <!-- Rendered Markdown goes here -->
+                  </div>
+                </section>
+
+                <footer class="footer-stats">
+                  <div class="stat-inline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="stat-icon">
+                      <polygon
+                        points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
+                      </polygon>
+                    </svg>
+                    <b id="card-stars">0</b>
+                  </div>
+                  <div class="stat-inline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="stat-icon">
+                      <line x1="6" y1="3" x2="6" y2="15"></line>
+                      <circle cx="18" cy="6" r="3"></circle>
+                      <circle cx="6" cy="18" r="3"></circle>
+                      <path d="M18 9a9 9 0 0 1-9 9"></path>
+                    </svg>
+                    <b id="card-forks">0</b>
+                  </div>
+                  <div class="stat-inline">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="stat-icon">
+                      <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                      <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    <b id="card-watchers">0</b>
+                  </div>
+                </footer>
+              </main>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <aside class="controls-panel">
+        <div class="control-group">
+          <label>Canvas Aspect Ratio</label>
+          <select id="size-preset">
+            <option value="horizontal">Horizontal (16:9)</option>
+            <option value="square">Instagram Square (1:1)</option>
+            <option value="vertical">Instagram Story (9:16)</option>
+            <option value="og">Open Graph (1.91:1)</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label>Section Toggles</label>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <label style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+              <span style="font-size: 0.9rem; color: var(--text-primary);">File Explorer</span>
+              <input type="checkbox" id="toggle-explorer" checked>
+            </label>
+            <label style="display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+              <span style="font-size: 0.9rem; color: var(--text-primary);">README Preview</span>
+              <input type="checkbox" id="toggle-readme" checked>
+            </label>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label class="group-header">
+            <span>Card Theme</span>
+            <button id="toggle-theme-grid" class="text-btn">Show All</button>
+          </label>
+          <div class="theme-grid" id="theme-grid">
+            <!-- Dark Themes -->
+            <button class="theme-btn active" data-mode="dark"
+              data-gradient="linear-gradient(135deg, #1f2937 0%, #111827 100%)" style="background: #1f2937;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #0f172a 0%, #020617 100%)"
+              style="background: #020617;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #1e1b4b 0%, #0f172a 100%)"
+              style="background: #1e1b4b;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #4c1d95 0%, #2e1065 100%)"
+              style="background: #4c1d95;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #111827 0%, #000000 100%)"
+              style="background: #000;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #064e3b 0%, #022c22 100%)"
+              style="background: #064e3b;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #7f1d1d 0%, #450a0a 100%)"
+              style="background: #7f1d1d;"></button>
+            <button class="theme-btn" data-mode="dark" data-gradient="linear-gradient(135deg, #0c4a6e 0%, #082f49 100%)"
+              style="background: #0c4a6e;"></button>
+
+            <!-- Light Themes -->
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)"
+              style="background: #f8fafc; border: 1px solid #cbd5e1;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%)"
+              style="background: #dbeafe; border: 1px solid #93c5fd;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #e9d5ff 0%, #d8b4fe 100%)"
+              style="background: #e9d5ff; border: 1px solid #c084fc;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%)"
+              style="background: #d1fae5; border: 1px solid #6ee7b7;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #fecaca 0%, #fca5a5 100%)"
+              style="background: #fecaca; border: 1px solid #f87171;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #fed7aa 0%, #fdba74 100%)"
+              style="background: #fed7aa; border: 1px solid #fb923c;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #fae8ff 0%, #f5d0fe 100%)"
+              style="background: #fae8ff; border: 1px solid #e879f9;"></button>
+            <button class="theme-btn" data-mode="light"
+              data-gradient="linear-gradient(135deg, #bae6fd 0%, #7dd3fc 100%)"
+              style="background: #bae6fd; border: 1px solid #38bdf8;"></button>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Repository Stats</label>
+          <div class="stats-inputs">
+            <div class="input-wrapper">
+              <span class="input-icon">⭐</span>
+              <input type="number" id="input-stars" placeholder="Stars" />
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon">🍴</span>
+              <input type="number" id="input-forks" placeholder="Forks" />
+            </div>
+            <div class="input-wrapper">
+              <span class="input-icon">👁️</span>
+              <input type="number" id="input-watchers" placeholder="Watchers" />
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <label>Export Format</label>
+          <select id="export-format">
+            <option value="png">PNG (Lossless)</option>
+            <option value="jpeg">JPEG (High Quality)</option>
+          </select>
+        </div>
+
+        <button id="download-btn" class="download-btn">
+          Download Masterpiece
+        </button>
+      </aside>
+    </main>
+  </div>
+
+  <footer class="app-footer">
+    <p>Made with ❤️ by <a href="https://github.com/dexccv" target="_blank" rel="noopener noreferrer">dexccv</a></p>
+  </footer>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>
